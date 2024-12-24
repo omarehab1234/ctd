@@ -12,7 +12,9 @@ def start_record():
     
         fourcc = cv2.VideoWriter_fourcc(*'MP4V')
         cap = cv2.VideoWriter('cap.mp4', fourcc, 20.0, (640,480))
-        time_s = time.time() 
+        time_s = time.time()
+        
+        time.sleep(1) 
         while time.time() - time_s < 5:
             isTrue, frame = vid.read()
             if not isTrue:
@@ -21,6 +23,10 @@ def start_record():
             else:
                 cv2.imshow('frame', frame)
                 cap.write(frame)
+                
+            if cv2.waitKey(20) & 0xff == ord("d"):
+                print("got broke")
+                break 
     
         vid.release()
         cap.release()   
@@ -30,20 +36,40 @@ def start_record():
 def change():
     global vid_temp
     cv2.destroyAllWindows()
-    vid_path = r"C:\Users\ALSAAD NASR CITY\cap.mp4"
+    vid_path = r"cap.mp4"
     vid = cv2.VideoCapture(vid_path)
     
     if not vid.isOpened():
         print("Failed to open the recorded video.")
         return
     
+    time.sleep(2)
+    # hena el gray scale vid
     if vid_temp:
-         while True:
+        vid_temp = False
+        while True:
+            isTrue, frame = vid.read()
+            gray_frame = cv2.cvtColor(frame,cv2.COLOR_BGR2GRAY)
+            if not isTrue:
+                print("End of video.")
+                break
+            cv2.imshow("Recorded Video", gray_frame)
+            if cv2.waitKey(20) & 0xff == ord("d"):
+                print("got broke")
+                break
+    # hena el vedio el 3ady
+    else:
+        vid_temp = True
+        while True:
             isTrue, frame = vid.read()
             if not isTrue:
                 print("End of video.")
                 break
             cv2.imshow("Recorded Video", frame)
+            if cv2.waitKey(20) & 0xff == ord("d"):
+                print("got broke")
+                break
+        
 
         
 #3shan nekasar el root 
